@@ -2,7 +2,7 @@ export default {
   /**
    * The title to display in the site header
    */
-  title: 'Quick Blog',
+  title: 'The Blag of Raz',
 
   /**
    * The number of posts to load per page.
