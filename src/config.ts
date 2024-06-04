@@ -5,6 +5,11 @@ export default {
   title: 'The Blag of Raz',
 
   /**
+   * The prefix of your site from the root domain
+   */
+  rootUri: '/blag',
+
+  /**
    * The number of posts to load per page.
    */
   postsPerPage: 10,

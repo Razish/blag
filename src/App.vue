@@ -3,10 +3,10 @@
     <div id="header">
       <div id="top">
         <div id="header-title">
-          <h2><a href="/#/">{{ title }}</a></h2>
+          <h2><a :href="`${rootUri}/#/`">{{ title }}</a></h2>
         </div>
       </div>
-    </div>    
+    </div>
     <div class="posts">
       <Post
         v-for="post in loadedPosts"
@@ -51,6 +51,9 @@ export default Vue.component('app', {
     },
     title(): string {
       return config.title;
+    },
+    rootUri(): string {
+      return config.rootUri;
     }
   },
   watch: {
