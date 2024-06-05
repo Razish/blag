@@ -3,20 +3,20 @@
     <div id="header">
       <div id="top">
         <div id="header-title">
-          <h2><a :href="`${rootUri}/#/`">{{ title }}</a></h2>
+          <h2>
+            <a :href="`${rootUri}/#/`">{{ title }}</a>
+          </h2>
         </div>
       </div>
     </div>
     <div class="posts">
-      <Post
-        v-for="post in loadedPosts"
-        v-bind:key="post.summary.title"
-        v-bind:summary="post.summary"
-        v-bind:content="post.content"
-      ></Post>
+      <Post v-for="post in loadedPosts" v-bind:key="post.summary.title" v-bind:summary="post.summary"
+        v-bind:content="post.content"></Post>
     </div>
-    <div class="load-more" v-if="(loadedPosts.length > 0) && (loadedPosts.length < postSummaries.length)">
-      <button class="load-more-button" v-on:click="fetchMore()">Load Older Posts</button>
+    <div class="load-more" v-if="loadedPosts.length > 0 && loadedPosts.length < postSummaries.length">
+      <button class="load-more-button" v-on:click="fetchMore()">
+        Load Older Posts
+      </button>
     </div>
   </div>
 </template>
@@ -41,10 +41,12 @@ function fetchPosts(params: any) {
 
 export default Vue.component('app', {
   components: {
-    Post,
+    Post
   },
   data: () => store.data,
-  created(): void { fetchPosts(this.$route.params);  },
+  created(): void {
+    fetchPosts(this.$route.params);
+  },
   computed: {
     tag(): string {
       return this.$route.params.tag;
@@ -59,7 +61,6 @@ export default Vue.component('app', {
   watch: {
     $route(to, from): void {
       fetchPosts(this.$route.params);
-
     }
   },
   methods: {

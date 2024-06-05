@@ -7,25 +7,23 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: checkout 
-      uses: actions/checkout@v2
+    - name: checkout
+      uses: actions/checkout@v4
     - name: Use node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v4
       with:
-        node-version: '14.x'
+        node-version: '22.x'
     - name: build
       run: |
         npm install
         npm run precompile
-        npm run build --if-present
+        NODE_OPTIONS="--openssl-legacy-provider" npm run build --if-present
       env:
         CI: true
     - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+      uses: JamesIves/github-pages-deploy-action@releases/v4
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages # The branch the action should deploy to.

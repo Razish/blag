@@ -5,10 +5,11 @@
         {{ summary.title }}
       </router-link>
     </h1>
-    <div class="post-info"> {{ formattedDate }} - 
+    <div class="post-info">
+      {{ formattedDate }} -
       <li class="tag-link" v-for="tag in tags" :key="tag">
         <router-link :to="'/tags/' + tag">
-          {{tag}}
+          {{ tag }}
         </router-link>
       </li>
     </div>
@@ -19,11 +20,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Moment } from 'moment';
+import Prism from 'prismjs';
 
 export default Vue.component('Post', {
   props: {
     summary: Object,
-    content: String,
+    content: String
   },
   computed: {
     formattedDate(): string {
@@ -33,12 +35,18 @@ export default Vue.component('Post', {
       return this.summary.tags;
     }
   },
+  mounted() {
+    window.Prism = window.Prism || {};
+    window.Prism.manual = true;
+    Prism.highlightAll();
+  }
 });
 </script>
 
 <!-- This is for the post itself -->
 <style>
-.content a, .content a:visited {
+.content a,
+.content a:visited {
   color: rgb(75, 75, 75) !important;
 }
 
@@ -46,7 +54,8 @@ export default Vue.component('Post', {
   color: rgb(75, 75, 75) !important;
 }
 
-.content pre, .content code {
+.content pre,
+.content code {
   font-family: "Lucida Console", Monaco, monospace !important;
   margin: 0em !important;
   padding-left: 0.25em !important;
@@ -56,9 +65,8 @@ export default Vue.component('Post', {
 }
 
 .content pre {
-  padding: 0.5em !important; 
+  padding: 0.5em !important;
 }
-
 </style>
 
 <!-- Because this is scoped, it doesn't apply to the v-html post itself -->

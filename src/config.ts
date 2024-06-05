@@ -5,9 +5,9 @@ export default {
   title: 'The Blag of Raz',
 
   /**
-   * The prefix of your site from the root domain
+   * The prefix of your site from the root domain.
    */
-  rootUri: '/blag',
+  rootUri: process.env.NODE_ENV === 'production' ? '/blag' : '',
 
   /**
    * The number of posts to load per page.
@@ -17,5 +17,5 @@ export default {
   /**
    * The abolute path to the content to display.
    */
-  postsPath: 'content/posts.json'
+  postsPath: 'content/posts.json',
 };
