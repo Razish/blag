@@ -58,3 +58,6 @@ body {
   color: #ffffff !important;
   background-color: inherit !important; /* reset */
 }
+a[href^='http']::before {
+  content: '\1F517';
+}
