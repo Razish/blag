@@ -7,10 +7,10 @@
     </h1>
     <div class="post-info">
       {{ formattedDate }} -
-      <li class="tag-link" v-for="tag in tags" :key="tag">
-        <router-link :to="'/tags/' + tag">
-          {{ tag }}
-        </router-link>
+      <li class="tag-link" v-for="( tag, index ) in tags" :key="tag">
+        <router-link :to="'/tags/' + tag">{{ tag }}</router-link>
+        <span v-if="index != Object.keys(tags).length - 1">,
+        </span>
       </li>
     </div>
     <div class="content" v-html="content"></div>
