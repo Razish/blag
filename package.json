@@ -1,46 +1,38 @@
 {
-  "name": "vue",
-  "version": "0.1.0",
+  "name": "razish-blag",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "build": "vite build",
+    "dev": "vite",
+    "lint": "biome check",
     "precompile": "tsc --project precompile && node precompile/build/main/precompile.js",
-    "serve": "vue-cli-service serve",
-    "test:unit": "vue-cli-service test:unit"
+    "serve": "vite preview"
   },
   "dependencies": {
-    "@types/marked": "^0.7.4",
-    "@types/prismjs": "^1.26.4",
-    "core-js": "^3.8.3",
-    "marked": "^1.1.0",
-    "prismjs": "^1.29.0",
-    "vue": "^2.6.11",
-    "vue-router": "^3.3.2"
+    "core-js": "^3.37.1",
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.4.0",
-    "@types/jest": "^25.2.1",
-    "@types/node": "^13.13.52",
-    "@vue/cli-plugin-babel": "^5.0.8",
-    "@vue/cli-plugin-typescript": "^4.3.1",
-    "@vue/cli-plugin-unit-jest": "^4.3.1",
-    "@vue/cli-service": "^4.3.1",
+    "@biomejs/biome": "1.8.0",
+    "@types/marked": "^6.0.0",
+    "@types/node": "^20.14.2",
+    "@types/prismjs": "^1.26.4",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/devtools": "^6.6.3",
     "@vue/runtime-dom": "^3.4.27",
-    "@vue/test-utils": "^1.0.0-beta.33",
-    "babel-plugin-prismjs": "^2.1.0",
-    "eslint": "^9.4.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-vue": "^9.26.0",
-    "front-matter": "^4.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "autoprefixer": "^10.4.19",
+    "front-matter": "^4.0.2",
     "globals": "^15.3.0",
-    "moment": "^2.25.3",
-    "ts-jest": "^25.4.0",
-    "ts-node": "^8.9",
-    "typescript": "^3.8.3",
-    "typescript-eslint": "^8.0.0-alpha.10",
-    "vue-template-compiler": "^2.6.11"
+    "marked": "^12.0.2",
+    "moment": "^2.30.1",
+    "prismjs": "^1.29.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.5",
+    "vite": "^5.2.12",
+    "vite-plugin-prismjs": "^0.0.11"
   },
   "postcss": {
     "plugins": {
@@ -51,30 +43,5 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ],
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json",
-      "vue",
-      "ts",
-      "tsx"
-    ],
-    "transform": {
-      "^.+\\.vue$": "vue-jest",
-      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    },
-    "snapshotSerializers": [
-      "jest-serializer-vue"
-    ],
-    "testMatch": [
-      "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
-    ],
-    "testURL": "http://localhost/"
-  }
+  ]
 }

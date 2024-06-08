@@ -1,8 +1,8 @@
 <template>
   <div class="post">
     <h1 class="post-title">
-      <router-link :to="'/posts/' + summary.title">
-        {{ summary.title }}
+      <router-link :to="'/posts/' + summary?.title">
+        {{ summary?.title }}
       </router-link>
     </h1>
     <div class="post-info">
@@ -18,28 +18,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Moment } from 'moment';
+import { defineComponent } from 'vue';
 import Prism from 'prismjs';
 
-export default Vue.component('Post', {
+export default defineComponent({
+  name: 'Post',
   props: {
     summary: Object,
-    content: String
+    content: String,
   },
   computed: {
     formattedDate(): string {
-      return this.summary.date.format('MMM DD, YYYY');
+      return this.summary?.date.format('MMM DD, YYYY');
     },
     tags(): string[] {
-      return this.summary.tags;
-    }
+      return this.summary?.tags;
+    },
   },
   mounted() {
-    window.Prism = window.Prism || {};
-    window.Prism.manual = true;
     Prism.highlightAll();
-  }
+  },
 });
 </script>
 
@@ -54,8 +52,8 @@ export default Vue.component('Post', {
   color: rgb(75, 75, 75) !important;
 }
 
-.content pre,
-.content code {
+.content :not(pre) code,
+.content pre {
   font-family: "Lucida Console", Monaco, monospace !important;
   margin: 0em !important;
   padding-left: 0.25em !important;

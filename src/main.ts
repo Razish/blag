@@ -1,20 +1,14 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createApp } from 'vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
 
-Vue.config.productionTip = false;
-
-const router = new VueRouter({
+const router = createRouter({
+  history: createWebHashHistory(),
   routes: [
-    { path: '/', component: App },
-    { path: '/tags/:tag', component: App },
-    { path: "/posts/:title", component: App },
+    { path: '/', name: 'index', component: App },
+    { path: '/tags/:tag', name: 'postsByTag', component: App },
+    { path: '/posts/:title', name: 'post', component: App },
   ],
 });
 
-Vue.use(VueRouter);
-
-new Vue({
-  router,
-  render: h => h(App),
-}).$mount('#app');
+createApp(App).use(router).mount('#app');

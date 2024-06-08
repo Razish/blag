@@ -1,4 +1,4 @@
-import moment, { Moment } from 'moment';
+import moment, { type Moment } from 'moment';
 
 interface PostSummary {
   path: string;
@@ -8,7 +8,10 @@ interface PostSummary {
 }
 
 class PostData {
-  constructor(public summary: PostSummary, public content: string) {}
+  constructor(
+    public summary: PostSummary,
+    public content: string
+  ) {}
 }
 
 class Store {
@@ -19,15 +22,17 @@ class Store {
 
   private manifest: PostSummary[] | null = null;
 
-  constructor(private readonly postsPath: string, private readonly postsPerPage: number) {}
+  constructor(
+    private readonly postsPath: string,
+    private readonly postsPerPage: number
+  ) {}
 
   public async fetchPostsByTag(tag: string | null = null) {
     this.fetchPostsByFilter((post: PostSummary) => {
       if (tag === null) {
         return !post.tags.includes('draft');
-      } else {
-        return post.tags.includes(tag);
       }
+      return post.tags.includes(tag);
     });
   }
 
@@ -53,7 +58,9 @@ class Store {
       const out: PostSummary[] = await (await fetch(this.postsPath)).json();
       this.manifest = out;
     }
-    this.manifest.forEach(p => (p.date = moment(p.date)));
+    for (const post of this.manifest) {
+      post.date = moment(post.date);
+    }
     return this.manifest as PostSummary[];
   }
 

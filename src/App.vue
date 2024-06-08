@@ -9,7 +9,10 @@
         </div>
       </div>
     </div>
-    <div class="posts">
+    <div ids="nav">
+      <p v-if="filter">Showing posts matching: {{ filter }}</p>
+    </div>
+    <div id="posts">
       <Post v-for="post in loadedPosts" v-bind:key="post.summary.title" v-bind:summary="post.summary"
         v-bind:content="post.content"></Post>
     </div>
@@ -22,33 +25,35 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, ref } from 'vue';
+import type { RouteParams } from 'vue-router';
 import Post from './components/Post.vue';
-import Store from './store';
 import config from './config';
+import Store from './store';
 
 document.title = config.title;
 
-const store = new Store(config.postsPath, config.postsPerPage);
+// make store reactive
+const store = ref(new Store(config.postsPath, config.postsPerPage));
 
-function fetchPosts(params: any) {
+type PostFetchParams = RouteParams;
+
+function fetchPosts(params: PostFetchParams) {
   if (params.title) {
-    store.fetchPostsByTitle(params.title);
+    store.value.fetchPostsByTitle(params.title as string);
   } else {
-    store.fetchPostsByTag(params.tag);
+    store.value.fetchPostsByTag(params.tag as string);
   }
 }
 
-export default Vue.component('app', {
+export default defineComponent({
+  name: 'App',
   components: {
-    Post
+    Post,
   },
-  data: () => store.data,
-  created(): void {
-    fetchPosts(this.$route.params);
-  },
+  data: () => store.value.data,
   computed: {
-    tag(): string {
+    tag(): string | string[] {
       return this.$route.params.tag;
     },
     title(): string {
@@ -56,18 +61,21 @@ export default Vue.component('app', {
     },
     rootUri(): string {
       return config.rootUri;
-    }
+    },
+    filter(): string | string[] {
+      return this.$route.params.tag || this.$route.params.title;
+    },
   },
   watch: {
-    $route(to, from): void {
+    $route(): void {
       fetchPosts(this.$route.params);
-    }
+    },
   },
   methods: {
     fetchMore(): void {
-      store.fetchMore();
-    }
-  }
+      store.value.fetchMore();
+    },
+  },
 });
 </script>
 

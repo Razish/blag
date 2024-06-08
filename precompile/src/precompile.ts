@@ -1,9 +1,8 @@
-import * as fs from 'fs';
-import path from 'path';
-import { promisify } from 'util';
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
 import fm from 'front-matter';
-import moment, { Moment } from 'moment';
-import marked from 'marked';
+import { marked } from 'marked';
+import moment, { type Moment } from 'moment';
 
 class Config {
   constructor(
@@ -22,9 +21,15 @@ class Config {
   ) {}
 
   sourceContentDir(contentType: string) {
-    return this.sourceDir + '/' + contentType;
+    return `${this.sourceDir}/${contentType}`;
   }
 }
+
+type RawAttributes = {
+  title: string;
+  date: string;
+  tags: string;
+};
 
 class Post {
   constructor(
@@ -44,14 +49,14 @@ class Precompiler {
   constructor(public config: Config) {}
 
   async run() {
-    let contentTypes = await promisify(fs.readdir)(config.sourceDir);
+    const contentTypes = await fs.readdir(config.sourceDir);
     for (const contentType of contentTypes) {
       await this.precompileContentType(contentType);
     }
   }
 
   async precompileContentType(contentType: string) {
-    let contents = await this.loadContents(contentType);
+    const contents = await this.loadContents(contentType);
     for (const p of contents) {
       await this.writeContent(p);
     }
@@ -59,10 +64,10 @@ class Precompiler {
   }
 
   async loadContents(contentType: string): Promise<Array<Post>> {
-    let files = await promisify(fs.readdir)(config.sourceContentDir(contentType));
-    let out: Post[] = [];
-    for (let file of files) {
-      out.push(await this.parseContent(config.sourceContentDir(contentType) + '/' + file));
+    const files = await fs.readdir(config.sourceContentDir(contentType));
+    const out: Post[] = [];
+    for (const file of files) {
+      out.push(await this.parseContent(`${config.sourceContentDir(contentType)}/${file}`));
     }
     return out;
   }
@@ -70,10 +75,10 @@ class Precompiler {
   async writeContent(post: Post): Promise<void> {
     const fullPath = `${config.targetDir}/${post.file}`;
     const directory = path.dirname(fullPath);
-    const transformedContent = this.generateContent(post);
+    const transformedContent = await this.generateContent(post);
 
-    await promisify(fs.mkdir)(directory, { recursive: true });
-    await promisify(fs.writeFile)(fullPath, transformedContent);
+    await fs.mkdir(directory, { recursive: true });
+    await fs.writeFile(fullPath, transformedContent);
 
     console.log(' ', fullPath);
   }
@@ -83,39 +88,38 @@ class Precompiler {
    * - if markdown, transforms into HTML.
    * - otherwise, assumes HTML.
    */
-  generateContent(post: Post) {
+  generateContent(post: Post): string | Promise<string> {
     const suffix = post.file.split('.').pop();
-    if ((suffix || '').toLowerCase() == 'md') {
-      return marked(post.content);
-    } else {
-      return post.content;
+    if ((suffix || '').toLowerCase() === 'md') {
+      return marked.parse(post.content);
     }
+    return post.content;
   }
 
   async writeManifest(contentType: string, posts: Array<Post>) {
-    let index = posts
+    const index = posts
       .sort((a, b) => b.date.valueOf() - a.date.valueOf()) //descending order by date
       .map(p => p.toSummary());
 
-    let outPath = `${config.targetDir}/${config.sourceDir}/${contentType}.json`;
+    const outPath = `${config.targetDir}/${config.sourceDir}/${contentType}.json`;
 
-    await promisify(fs.writeFile)(outPath, JSON.stringify(index));
+    await fs.writeFile(outPath, JSON.stringify(index));
 
     console.log('  Manifest: ', outPath);
   }
 
   async parseContent(path: string): Promise<Post> {
-    let content = await promisify(fs.readFile)(path);
-    let parsed = fm<any>(content.toString());
-    let time = moment(parsed.attributes.date);
-    let tags = (parsed.attributes.tags || '').split(',').map((s: string) => s.replace(/ /g, ''));
+    const content = await fs.readFile(path);
+    const parsed = fm<RawAttributes>(content.toString());
+    const time = moment(parsed.attributes.date);
+    const tags = (parsed.attributes.tags || '').split(',').map((s: string) => s.replace(/ /g, ''));
     return new Post(path, parsed.attributes.title, time, tags, parsed.body);
   }
 }
 
 console.log('Precompiling');
 
-let config = new Config('content', 'public');
+const config = new Config('content', 'public');
 
 new Precompiler(config).run().catch(reason => {
   console.log(reason);
