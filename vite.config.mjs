@@ -2,9 +2,12 @@ import path from 'node:path';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 import prismjs from 'vite-plugin-prismjs';
+import config from './src/config';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: config.rootUri,
+
   plugins: [
     vue(),
     prismjs({
@@ -48,9 +51,4 @@ export default defineConfig({
       css: true,
     }),
   ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
 });
