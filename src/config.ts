@@ -7,7 +7,7 @@ export default {
   /**
    * The prefix of your site from the root domain.
    */
-  rootUri: process.env.NODE_ENV === 'production' ? '/blag' : '',
+  rootUri: '/',
 
   /**
    * The number of posts to load per page.
