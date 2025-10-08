@@ -15,6 +15,9 @@ It is a simple, minimal plug and play solution for running a blog on Github page
 ## Development
 
 ```sh
+# install node
+asdf install
+
 # build the manifest (posts.json)
 npm run precompile
 
